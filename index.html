@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport                                   <tbody>
+                                <tr class="loading-row">
+                                    <td colspan="4">
+                                        <div class="loading-spinner"></div>
+                                        Cargando tabla de sanciones...
+                                    </td>
+                                </tr>
+                            </tbody>             <tbody>
+                                <tr class="loading-row">
+                                    <td colspan="5">
+                                        <div class="loading-spinner"></div>
+                                        Cargando clasificación ofensiva...
+                                    </td>
+                                </tr>
+                            </tbody>t="width=device-width, initial-scale=1.0">
+    <title>Calicasas FC - Clasificación Temporada 2026</title>
+    <link rel="icon" type="image/webp" href="images/descargar.webp">
+    <link rel="shortcut icon" type="image/webp" href="images/descargar.webp">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Sistema de gestión y clasificación para la peña de fútbol - Temporada 2026">
+</head>
+<body>
+    <!-- ============================================ -->
+    <!-- HEADER PRINCIPAL -->
+    <!-- ============================================ -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="club-logo">
+                        <img src="images/descargar.webp" alt="Escudo Calicasas" class="logo-image">
+                        <div class="club-info">
+                            <h1>⚽ Calicasas FC</h1>
+                            <span class="season">Temporada 2026</span>
+                            <small class="referee">Árbitro: Juanxus</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="refreshBtn" class="btn btn-primary">
+                        <span>🔄</span> Actualizar Datos
+                    </button>
+                    <div id="lastUpdate" class="last-update"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================ -->
+    <!-- CONTENIDO PRINCIPAL -->
+    <!-- ============================================ -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- SECCIÓN DE TABLAS PÚBLICAS -->
+            <section id="publicTables" class="tables-section">
+                
+                <!-- TABLA DE CLASIFICACIÓN OFENSIVA -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h2>🎯 Clasificación Ofensiva</h2>
+                        <small>Puntuación: Goles ×3 + Asistencias ×2</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="offensiveTable" class="stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>PJ</th>
+                                    <th>Goles</th>
+                                    <th>Asist.</th>
+                                    <th class="points-col">Puntos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="loading-row">
+                                    <td colspan="5">
+                                        <div class="loading-spinner"></div>
+                                        Cargando estadísticas...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TABLA DE SANCIONES -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h2>📋 Tabla de Sanciones</h2>
+                        <small>Registro de tarjetas por jugador</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="penaltyTable" class="stats-table penalty-table">
+                            <thead>
+                                <tr>
+                                    <th>Jugador</th>
+                                    <th>PJ</th>
+                                    <th>🟡 Amarillas</th>
+                                    <th>🟥 Rojas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="loading-row">
+                                    <td colspan="5">
+                                        <div class="loading-spinner"></div>
+                                        Cargando sanciones...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </section>
+
+            <!-- SECCIÓN DE LOGIN PARA ADMINISTRADOR -->
+            <section id="loginSection" class="admin-section">
+                <div class="login-card">
+                    <div class="card-header">
+                        <h2>🔐 Acceso de Administrador</h2>
+                        <p>Solo para gestión de estadísticas</p>
+                    </div>
+                    
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label for="username">Usuario:</label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username"
+                                placeholder="Introduce tu usuario"
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password"
+                                placeholder="Introduce tu contraseña"
+                                required
+                                autocomplete="current-password"
+                            >
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success">
+                            <span>🚪</span> Iniciar Sesión
+                        </button>
+                    </form>
+                    
+                    <div id="loginError" class="error-message" style="display: none;"></div>
+                    
+                    <!-- Credenciales por defecto (solo para desarrollo) -->
+                    <div class="login-hint">
+                        <details>
+                            <summary>💡 ¿Olvidaste las credenciales?</summary>
+                            <p><small>Contacta al administrador del sistema</small></p>
+                            <small>⚠️ Solo para administradores autorizados</small>
+                        </details>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PANEL DE ADMINISTRACIÓN (oculto inicialmente) -->
+            <section id="adminPanel" class="admin-section" style="display: none;">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <div class="admin-header-content">
+                            <img src="images/descargar.webp" alt="Escudo Calicasas" class="admin-logo">
+                            <h2>⚙️ Panel de Administración - Calicasas FC</h2>
+                        </div>
+                        <button id="logoutBtn" class="btn btn-secondary">
+                            <span>🚪</span> Cerrar Sesión
+                        </button>
+                    </div>
+                    
+                    <!-- FORMULARIO DE GESTIÓN DE JUGADORES -->
+                    <form id="playerForm" class="player-form">
+                        
+                        <!-- SELECTOR/CREADOR DE JUGADOR -->
+                        <div class="form-section">
+                            <h3>Seleccionar Jugador</h3>
+                            <div class="form-row">
+                                <div class="form-group flex-grow">
+                                    <label for="playerSelect">Jugador existente:</label>
+                                    <select id="playerSelect" class="form-select">
+                                        <option value="">Selecciona un jugador...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPlayerName">O crear nuevo:</label>
+                                    <input 
+                                        type="text" 
+                                        id="newPlayerName" 
+                                        placeholder="Nombre del nuevo jugador"
+                                        class="form-input"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ESTADÍSTICAS GENERALES -->
+                        <div class="form-section">
+                            <h3>📊 Estadísticas Generales</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="matchesPlayed">🏟️ Partidos Jugados:</label>
+                                    <input 
+                                        type="number" 
+                                        id="matchesPlayed" 
+                                        name="matchesPlayed"
+                                        min="0" 
+                                        placeholder="0"
+                                        class="form-input"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- ESTADÍSTICAS OFENSIVAS -->
+                        <div class="form-section">
+                            <h3>⚽ Estadísticas Ofensivas</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="goals">⚽ Goles:</label>
+                                    <input 
+                                        type="number" 
+                                        id="goals" 
+                                        name="goals"
+                                        min="0" 
+                                        placeholder="0"
+                                        class="form-input"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="assists">🎯 Asistencias:</label>
+                                    <input 
+                                        type="number" 
+                                        id="assists" 
+                                        name="assists"
+                                        min="0" 
+                                        placeholder="0"
+                                        class="form-input"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- SANCIONES -->
+                        <div class="form-section">
+                            <h3>🔶 Sanciones</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="yellows">🟡 Tarjetas Amarillas:</label>
+                                    <input 
+                                        type="number" 
+                                        id="yellows" 
+                                        name="yellows"
+                                        min="0" 
+                                        placeholder="0"
+                                        class="form-input"
+                                    >
+                                </div>
+                                <div class="form-group">
+                                    <label for="reds">🟥 Tarjetas Rojas:</label>
+                                    <input 
+                                        type="number" 
+                                        id="reds" 
+                                        name="reds"
+                                        min="0" 
+                                        placeholder="0"
+                                        class="form-input"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- BOTONES DE ACCIÓN -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-success">
+                                <span>💾</span> Guardar Cambios
+                            </button>
+                            <button type="button" id="clearFormBtn" class="btn btn-secondary">
+                                <span>🧹</span> Limpiar Formulario
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- ACCIONES ADMINISTRATIVAS -->
+                    <div class="admin-actions">
+                        <h3>🔧 Acciones Administrativas</h3>
+                        <div class="actions-row">
+                            <button id="resetStatsBtn" class="btn btn-warning">
+                                <span>🔄</span> Reiniciar Todas las Estadísticas
+                            </button>
+                            <button id="exportDataBtn" class="btn btn-info">
+                                <span>📊</span> Exportar Datos (JSON)
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- MENSAJES DE ESTADO -->
+                    <div id="adminMessages" class="admin-messages"></div>
+                </div>
+            </section>
+            
+        </div>
+    </main>
+
+    <!-- ============================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="images/descargar.webp" alt="Escudo Calicasas" class="footer-logo-img">
+                    <div class="footer-info">
+                        <h3>Calicasas FC</h3>
+                        <p>&copy; 2026 Calicasas Football Club | Sistema de Gestión Deportiva</p>
+                    </div>
+                </div>
+                <div class="footer-stats">
+                    <span class="footer-info">Árbitro: <strong>Juanxus</strong></span>
+                    <span class="footer-info">Total Jugadores: <span id="totalPlayers">27</span></span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================ -->
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <!-- ============================================ -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Confirmar Acción</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">¿Estás seguro de realizar esta acción?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modalCancel" class="btn btn-secondary">Cancelar</button>
+                <button id="modalConfirm" class="btn btn-danger">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TOAST NOTIFICATIONS -->
+    <!-- ============================================ -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- ============================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================ -->
+    <script src="js/app.js"></script>
+</body>
+</html>
