@@ -1,8 +1,4 @@
 <?php
-// ============================================
-// API DE LOGIN Y AUTENTICACIÓN
-// Gestiona el inicio de sesión del administrador
-// ============================================
 
 // Iniciar sesión PHP
 session_start();
@@ -34,9 +30,6 @@ function logLoginAttempt($username, $success, $ip) {
     error_log("Login attempt - User: $username, Success: " . ($success ? 'YES' : 'NO') . ", IP: $ip");
 }
 
-// ============================================
-// ENDPOINT PRINCIPAL - LOGIN
-// ============================================
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
@@ -129,17 +122,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
     } catch (Exception $e) {
         error_log("Error en login.php: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false, 
-            'error' => 'Error interno del servidor'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false, 
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false, 
+                'error' => 'Error interno del servidor'
+            ], 500);
+        }
     }
 
 } 
 
-// ============================================
-// ENDPOINT PARA VERIFICAR SESIÓN (GET)
-// ============================================
 
 else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -162,9 +161,6 @@ else if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 }
 
-// ============================================
-// LOGOUT (DELETE request)
-// ============================================
 
 else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     
@@ -186,15 +182,4 @@ else {
         'error' => 'Método HTTP no permitido'
     ], 405);
 }
-
-// ============================================
-// NOTAS DE SEGURIDAD:
-// ============================================
-// 1. En producción cambiar contraseña admin
-// 2. Usar password_hash() y password_verify()
-// 3. Implementar limitación de intentos
-// 4. Usar HTTPS siempre
-// 5. Considerar usar JWT tokens para APIs
-// ============================================
-
 ?>

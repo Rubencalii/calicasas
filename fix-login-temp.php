@@ -1,6 +1,5 @@
 <?php
-// ARCHIVO TEMPORAL - BORRAR DESPUÉS DE USAR
-// Solo para solucionar el problema de login con NUEVO DOMINIO
+
 
 require_once 'config.php';
 

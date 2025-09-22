@@ -1,10 +1,4 @@
 <?php
-// ============================================
-// CONFIGURACIÓN DE BASE DE DATOS - INFINITYFREE
-// ============================================
-
-// Configuración de conexión MySQL para InfinityFree
-// IMPORTANTE: Cambiar estos valores por los de tu hosting
 
 // Host de MySQL (típicamente algo como sql###.infinityfree.com)
 define('DB_HOST', 'sql108.infinityfree.com');
@@ -29,7 +23,7 @@ function getDBConnection() {
         // Verificar conexión
         if ($conn->connect_error) {
             error_log("Error de conexión MySQL: " . $conn->connect_error);
-            die("Error de conexión a la base de datos. Verifica tu configuración.");
+            throw new Exception("Error de conexión a la base de datos: " . $conn->connect_error);
         }
         
         // Establecer charset UTF-8
@@ -38,7 +32,7 @@ function getDBConnection() {
         return $conn;
     } catch (Exception $e) {
         error_log("Excepción en conexión MySQL: " . $e->getMessage());
-        die("Error de conexión a la base de datos.");
+        throw new Exception("Error de conexión a la base de datos: " . $e->getMessage());
     }
 }
 

@@ -139,6 +139,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...options
             });
             
+            const contentType = response.headers.get('content-type');
+            
+            // Verificar que la respuesta sea JSON
+            if (!contentType || !contentType.includes('application/json')) {
+                const text = await response.text();
+                console.error('Respuesta no JSON:', text);
+                throw new Error('El servidor no devolvió una respuesta JSON válida. Esto puede indicar un error de configuración.');
+            }
+            
             const data = await response.json();
             
             if (!response.ok) {
@@ -148,6 +157,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return data;
         } catch (error) {
             console.error('API Error:', error);
+            
+            // Detectar errores de conexión específicos
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error('Error de conexión al servidor. Verifica tu conexión a internet.');
+            } else if (error.message.includes('JSON')) {
+                throw new Error('Error en el formato de respuesta del servidor. Contacta al administrador.');
+            }
+            
             throw error;
         }
     }
@@ -176,9 +193,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         } catch (error) {
             console.error('Error loading players:', error);
-            offensiveTableBody.innerHTML = `<tr><td colspan="5" class="error-message">Error al cargar datos: ${error.message}</td></tr>`;
-            penaltyTableBody.innerHTML = `<tr><td colspan="5" class="error-message">Error al cargar datos: ${error.message}</td></tr>`;
-            showToast('Error al cargar los datos de jugadores', 'error');
+            
+            let errorMessage = 'Error al cargar los datos de jugadores';
+            
+            // Personalizar mensaje según el tipo de error
+            if (error.message.includes('conexión')) {
+                errorMessage = 'Error de conexión con la base de datos. Inténtalo más tarde.';
+            } else if (error.message.includes('servidor')) {
+                errorMessage = 'Error del servidor. Contacta al administrador.';
+            } else if (error.message.includes('JSON') || error.message.includes('formato')) {
+                errorMessage = 'Error en la respuesta del servidor. Contacta al administrador.';
+            }
+            
+            offensiveTableBody.innerHTML = `<tr><td colspan="5" class="error-message">${errorMessage}</td></tr>`;
+            penaltyTableBody.innerHTML = `<tr><td colspan="5" class="error-message">${errorMessage}</td></tr>`;
+            showToast(errorMessage, 'error');
         }
     }
     

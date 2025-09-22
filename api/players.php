@@ -1,8 +1,4 @@
 <?php
-// ============================================
-// API REST PARA GESTIÓN DE JUGADORES
-// Endpoints: list, create, update, reset
-// ============================================
 
 // Iniciar sesión PHP
 session_start();
@@ -22,9 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// ============================================
-// FUNCIONES DE UTILIDAD
-// ============================================
 
 function sendJSONResponse($data, $statusCode = 200) {
     http_response_code($statusCode);
@@ -61,17 +54,10 @@ function validatePlayerStats($matches_played, $goals, $assists, $yellows, $reds)
            is_numeric($reds) && $reds >= 0;
 }
 
-// ============================================
-// OBTENER ACCIÓN DE LA URL
-// ============================================
 
 $action = $_GET['action'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ============================================
-// ENDPOINT: LISTAR TODOS LOS JUGADORES
-// GET /api/players.php?action=list
-// ============================================
 
 if ($action === 'list' && $method === 'GET') {
     
@@ -117,10 +103,19 @@ if ($action === 'list' && $method === 'GET') {
         
     } catch (Exception $e) {
         error_log("Error en listado de jugadores: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false,
-            'error' => 'Error al obtener la lista de jugadores'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error al obtener la lista de jugadores'
+            ], 500);
+        }
     }
 }
 
@@ -194,17 +189,23 @@ else if ($action === 'create' && $method === 'POST') {
         
     } catch (Exception $e) {
         error_log("Error creando jugador: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false,
-            'error' => 'Error al crear el jugador'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error al crear el jugador'
+            ], 500);
+        }
     }
 }
 
-// ============================================
-// ENDPOINT: ACTUALIZAR ESTADÍSTICAS DE JUGADOR
-// POST /api/players.php?action=update
-// ============================================
+
 
 else if ($action === 'update' && $method === 'POST') {
     
@@ -294,17 +295,23 @@ else if ($action === 'update' && $method === 'POST') {
         
     } catch (Exception $e) {
         error_log("Error actualizando jugador: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false,
-            'error' => 'Error al actualizar las estadísticas'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error al actualizar las estadísticas'
+            ], 500);
+        }
     }
 }
 
-// ============================================
-// ENDPOINT: REINICIAR TODAS LAS ESTADÍSTICAS
-// POST /api/players.php?action=reset
-// ============================================
+
 
 else if ($action === 'reset' && $method === 'POST') {
     
@@ -332,17 +339,21 @@ else if ($action === 'reset' && $method === 'POST') {
         
     } catch (Exception $e) {
         error_log("Error reiniciando estadísticas: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false,
-            'error' => 'Error al reiniciar las estadísticas'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error al reiniciar las estadísticas'
+            ], 500);
+        }
     }
 }
-
-// ============================================
-// ENDPOINT: ELIMINAR JUGADOR (OPCIONAL)
-// DELETE /api/players.php?action=delete&id=X
-// ============================================
 
 else if ($action === 'delete' && $method === 'DELETE') {
     
@@ -394,16 +405,21 @@ else if ($action === 'delete' && $method === 'DELETE') {
         
     } catch (Exception $e) {
         error_log("Error eliminando jugador: " . $e->getMessage());
-        sendJSONResponse([
-            'success' => false,
-            'error' => 'Error al eliminar el jugador'
-        ], 500);
+        
+        // Verificar si el error es de conexión a BD
+        if (strpos($e->getMessage(), 'conexión') !== false) {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error de conexión a la base de datos. Por favor, inténtalo más tarde.'
+            ], 503);
+        } else {
+            sendJSONResponse([
+                'success' => false,
+                'error' => 'Error al eliminar el jugador'
+            ], 500);
+        }
     }
 }
-
-// ============================================
-// ACCIÓN O MÉTODO NO VÁLIDO
-// ============================================
 
 else {
     sendJSONResponse([
@@ -416,15 +432,5 @@ else {
         ]
     ], 400);
 }
-
-// ============================================
-// NOTAS TÉCNICAS:
-// ============================================
-// 1. Todos los endpoints que modifican datos requieren autenticación
-// 2. Las validaciones se hacen tanto en frontend como backend
-// 3. Los puntos se calculan dinámicamente: Goles×3 + Asistencias×2
-// 4. Las sanciones: Amarillas×(-1) + Rojas×(-3)
-// 5. Se incluye logging de errores para debugging
-// ============================================
 
 ?>

@@ -1,7 +1,3 @@
--- ============================================
--- BASE DE DATOS PARA PEÑA DE FÚTBOL - TEMPORADA 2026
--- Sistema de gestión de estadísticas de jugadores
--- ============================================
 
 -- Crear tabla de usuarios (administradores)
 CREATE TABLE users (
@@ -11,7 +7,7 @@ CREATE TABLE users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Usuario administrador por defecto
+-- Usuario administrador
 -- Contraseña: calicacasas (¡CAMBIAR EN PRODUCCIÓN!)
 INSERT INTO users (username, password) VALUES ('admin', 'calicacasas');
 
@@ -64,10 +60,4 @@ CREATE INDEX idx_players_assists ON players(assists);
 CREATE INDEX idx_players_yellows ON players(yellows);
 CREATE INDEX idx_players_reds ON players(reds);
 
--- ============================================
--- NOTAS IMPORTANTES:
--- 1. Cambiar la contraseña del admin antes de subir a producción
--- 2. Usar password_hash() en PHP para contraseñas seguras
--- 3. El árbitro Juanxus no está incluido como jugador
--- 4. Todos los jugadores empiezan con estadísticas en 0
--- ============================================
+ALTER TABLE players ADD COLUMN matches_played INT DEFAULT 0 AFTER name;
