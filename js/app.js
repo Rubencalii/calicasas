@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function apiCall(endpoint, options = {}) {
         try {
+            console.log('Llamando API:', endpoint, options); // Debug
+            
             const response = await fetch(endpoint, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -139,16 +141,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...options
             });
             
+            console.log('Respuesta HTTP:', response.status, response.statusText); // Debug
+            
             const contentType = response.headers.get('content-type');
+            console.log('Content-Type:', contentType); // Debug
+            
+            // Obtener el texto de la respuesta primero
+            const responseText = await response.text();
+            console.log('Texto de respuesta:', responseText.substring(0, 200)); // Debug (primeros 200 chars)
             
             // Verificar que la respuesta sea JSON
             if (!contentType || !contentType.includes('application/json')) {
-                const text = await response.text();
-                console.error('Respuesta no JSON:', text);
-                throw new Error('El servidor no devolvió una respuesta JSON válida. Esto puede indicar un error de configuración.');
+                console.error('Respuesta no JSON completa:', responseText);
+                throw new Error(`El servidor no devolvió JSON válido. Respuesta: ${responseText.substring(0, 100)}...`);
             }
             
-            const data = await response.json();
+            // Intentar parsear JSON
+            let data;
+            try {
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('Error parseando JSON:', parseError);
+                console.error('Texto completo:', responseText);
+                throw new Error(`Respuesta no es JSON válido: ${responseText.substring(0, 100)}...`);
+            }
             
             if (!response.ok) {
                 throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -156,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             return data;
         } catch (error) {
-            console.error('API Error:', error);
+            console.error('API Error completo:', error);
             
             // Detectar errores de conexión específicos
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -633,4 +649,24 @@ window.debugApp = function() {
         update: 'api/players.php?action=update',
         reset: 'api/players.php?action=reset'
     });
+};
+
+// Función de test para diagnosticar problemas
+window.testConnection = async function() {
+    console.log('🔍 Probando conexión a la base de datos...');
+    try {
+        const response = await fetch('test-db.php');
+        const text = await response.text();
+        console.log('Respuesta de test-db.php:', text);
+        
+        try {
+            const data = JSON.parse(text);
+            console.log('✅ Datos parseados correctamente:', data);
+        } catch (e) {
+            console.error('❌ Error parseando JSON:', e);
+            console.error('Texto recibido:', text);
+        }
+    } catch (error) {
+        console.error('❌ Error en test de conexión:', error);
+    }
 };

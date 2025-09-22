@@ -1,4 +1,28 @@
 <?php
+// Limpiar cualquier salida previa
+ob_clean();
+ob_start();
+
+// Manejar errores fatales
+register_shutdown_function('handleFatalErrors');
+
+function handleFatalErrors() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        // Limpiar buffer
+        if (ob_get_level()) {
+            ob_clean();
+        }
+        
+        // Enviar respuesta JSON de error
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Error fatal del servidor: ' . $error['message']
+        ], JSON_UNESCAPED_UNICODE);
+    }
+}
 
 // Iniciar sesión PHP
 session_start();
@@ -20,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 
 function sendJSONResponse($data, $statusCode = 200) {
+    // Limpiar cualquier output buffer
+    if (ob_get_level()) {
+        ob_clean();
+    }
+    
     http_response_code($statusCode);
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit();
@@ -68,10 +97,11 @@ if ($action === 'list' && $method === 'GET') {
         $sql = "SELECT 
                     id,
                     name,
-                    goals,
-                    assists,
-                    yellows,
-                    reds,
+                    COALESCE(matches_played, 0) as matches_played,
+                    COALESCE(goals, 0) as goals,
+                    COALESCE(assists, 0) as assists,
+                    COALESCE(yellows, 0) as yellows,
+                    COALESCE(reds, 0) as reds,
                     created_at,
                     updated_at
                 FROM players 

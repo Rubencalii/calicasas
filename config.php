@@ -3,14 +3,14 @@
 // Host de MySQL (típicamente algo como sql###.infinityfree.com)
 define('DB_HOST', 'sql108.infinityfree.com');
 
-// Nombre de usuario MySQL (formato: epiz_XXXXXXXX)
-define('DB_USER', 'if0_39932720');
+// Nombre de usuario MySQL (formato: if0_XXXXXXXX)
+define('DB_USER', 'if0_39993495');
 
 // Contraseña de la base de datos MySQL
 define('DB_PASS', '9Hzc0DClqS');
 
-// Nombre de la base de datos (formato: epiz_XXXXXXXX_calicasas)
-define('DB_NAME', 'if0_39932720_calicasas');
+// Nombre de la base de datos (formato: if0_XXXXXXXX_calicasas)
+define('DB_NAME', 'if0_39993495_calicasas');
 
 // Configuración adicional
 define('DB_CHARSET', 'utf8mb4');

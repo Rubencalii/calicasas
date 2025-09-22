@@ -1,4 +1,28 @@
 <?php
+// Limpiar cualquier salida previa
+ob_clean();
+ob_start();
+
+// Manejar errores fatales
+register_shutdown_function('handleFatalErrors');
+
+function handleFatalErrors() {
+    $error = error_get_last();
+    if ($error !== NULL && $error['type'] === E_ERROR) {
+        // Limpiar buffer
+        if (ob_get_level()) {
+            ob_clean();
+        }
+        
+        // Enviar respuesta JSON de error
+        header('Content-Type: application/json');
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Error fatal del servidor: ' . $error['message']
+        ], JSON_UNESCAPED_UNICODE);
+    }
+}
 
 // Iniciar sesión PHP
 session_start();
@@ -20,6 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Función para enviar respuesta JSON
 function sendJSONResponse($data, $statusCode = 200) {
+    // Limpiar cualquier output buffer
+    if (ob_get_level()) {
+        ob_clean();
+    }
+    
     http_response_code($statusCode);
     echo json_encode($data, JSON_UNESCAPED_UNICODE);
     exit();
