@@ -670,3 +670,39 @@ window.testConnection = async function() {
         console.error('❌ Error en test de conexión:', error);
     }
 };
+
+// Función de diagnóstico completo
+window.diagnoseBD = async function() {
+    console.log('🩺 Ejecutando diagnóstico completo de base de datos...');
+    try {
+        const response = await fetch('diagnose-connection.php');
+        const text = await response.text();
+        console.log('📋 Diagnóstico completo:');
+        console.log(text);
+        
+        try {
+            const data = JSON.parse(text);
+            console.log('🔍 Análisis detallado:', data);
+            
+            // Mostrar resultados importantes
+            if (data.connection_tests?.basic_connection?.status === 'SUCCESS') {
+                console.log('✅ Conexión a BD: EXITOSA');
+            } else {
+                console.error('❌ Conexión a BD: FALLIDA');
+                console.error('Detalles:', data.connection_tests?.basic_connection);
+            }
+            
+            if (data.connection_tests?.tables_check) {
+                console.log('📊 Tablas existentes:', data.connection_tests.tables_check.existing_tables);
+                console.log('👤 Tabla users existe:', data.connection_tests.tables_check.users_exists ? '✅' : '❌');
+                console.log('⚽ Tabla players existe:', data.connection_tests.tables_check.players_exists ? '✅' : '❌');
+            }
+            
+        } catch (e) {
+            console.error('❌ Error parseando diagnóstico:', e);
+            console.log('Texto sin procesar:', text);
+        }
+    } catch (error) {
+        console.error('❌ Error ejecutando diagnóstico:', error);
+    }
+};
