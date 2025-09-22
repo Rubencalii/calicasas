@@ -1,14 +1,7 @@
-// ============================================
-// APLICACIÓN WEB PEÑA DE FÚTBOL - TEMPORADA 2026
-// Sistema de gestión de estadísticas de jugadores
-// ============================================
+
 
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // ============================================
-    // VARIABLES GLOBALES
-    // ============================================
-    
+
     let players = [];
     let isLoggedIn = false;
     let selectedPlayerId = null;
@@ -39,9 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalClose = document.getElementById('modalClose');
     const toastContainer = document.getElementById('toastContainer');
     
-    // ============================================
-    // FUNCIONES DE UTILIDAD
-    // ============================================
+
     
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
@@ -125,10 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedPlayerId = null;
     }
     
-    // ============================================
-    // FUNCIONES DE API
-    // ============================================
-    
+
     async function apiCall(endpoint, options = {}) {
         try {
             console.log('Llamando API:', endpoint, options); // Debug
@@ -187,9 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     async function loadPlayers() {
         try {
-            offensiveTableBody.innerHTML = '<tr class="loading-row"><td colspan="5"><div class="loading-spinner"></div>Cargando estadísticas...</td></tr>';
-            penaltyTableBody.innerHTML = '<tr class="loading-row"><td colspan="5"><div class="loading-spinner"></div>Cargando sanciones...</td></tr>';
-            
             const data = await apiCall('api/players.php?action=list');
             
             if (data.success) {
@@ -324,9 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // ============================================
-    // FUNCIONES DE ACTUALIZACIÓN DE UI
-    // ============================================
     
     function updateTables() {
         updateOffensiveTable();
@@ -436,10 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedPlayerId = player.id;
         newPlayerName.value = '';
     }
-    
-    // ============================================
-    // FUNCIÓN DE EXPORTACIÓN
-    // ============================================
+
     
     function exportData() {
         const exportData = {
@@ -468,10 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
         URL.revokeObjectURL(url);
         showToast('Datos exportados correctamente', 'success');
     }
-    
-    // ============================================
-    // EVENT LISTENERS
-    // ============================================
+
     
     // Refresh button
     refreshBtn.addEventListener('click', loadPlayers);
@@ -596,10 +572,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
-    // ============================================
-    // KEYBOARD SHORTCUTS
-    // ============================================
+
     
     document.addEventListener('keydown', (e) => {
         // Ctrl/Cmd + R to refresh data
@@ -614,10 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // ============================================
-    // INICIALIZACIÓN
-    // ============================================
-    
+
     // Load initial data
     loadPlayers();
     
@@ -633,9 +603,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('⚽ Sistema listo para gestionar estadísticas');
 });
 
-// ============================================
-// FUNCIONES GLOBALES DE UTILIDAD
-// ============================================
 
 // Función para debug en consola
 window.debugApp = function() {
